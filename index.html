@@ -3,58 +3,618 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Coming Soon</title>
-    <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <title>Hogwarts Spellbook</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
-        body {
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Crimson+Text:ital@0;1&display=swap');
+
+        :root {
+            --primary-color: #1a0f2e;
+            --text-color: #FEC260;
+            --accent-color: #a12568;
+        }
+
+        * {
             margin: 0;
-            height: 100vh;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: var(--primary-color);
+            color: var(--text-color);
+            font-family: 'Crimson Text', serif;
+            padding: 20px;
+            background-image: 
+                url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M30 0l15 15-15 15 15 15-15 15L0 30 30 0zm0 60l15-15-15-15 15-15L30 0l30 30-30 30z' fill='%232d1f47' fill-opacity='0.2' fill-rule='evenodd'/%3E%3C/svg%3E"),
+                url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M50 0l25 25-25 25 25 25-25 25L0 50 50 0zm0 100l25-25-25-25 25-25L50 0l50 50-50 50z' fill='%23a12568' fill-opacity='0.1' fill-rule='evenodd'/%3E%3C/svg%3E");
+            background-attachment: fixed;
+        }
+
+        .site-link {
+            text-align: center;
+            padding: 10px;
+            color: var(--text-color);
+            font-family: 'Playfair Display', serif;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+            transition: color 0.3s ease;
+        }
+
+        .site-link:hover {
+            color: #fff;
+        }
+
+        .header {
+            text-align: center;
+            margin: 20px 0 40px 0;
+            position: relative;
+            animation: fadeIn 1s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .header h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 3.5rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5),
+                         0 0 20px rgba(254, 194, 96, 0.3);
+        }
+
+        .header p {
+            font-size: 1.2rem;
+            font-style: italic;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+        }
+
+        .spell-counter {
+            font-size: 1.1rem;
+            margin-top: 20px;
+            font-family: 'Crimson Text', serif;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
+        .alphabet-index {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            margin: 20px auto;
+            padding: 15px;
+            background: linear-gradient(135deg, rgba(45, 31, 71, 0.9) 0%, rgba(61, 43, 95, 0.9) 100%);
+            border-radius: 50px;
+            flex-wrap: nowrap;
+            overflow-x: auto;
+            max-width: 800px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3),
+                        inset 0 2px 5px rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(254, 194, 96, 0.1);
+            backdrop-filter: blur(5px);
+        }
+
+        .alphabet-index::-webkit-scrollbar {
+            display: none;
+        }
+
+        .alphabet-index a {
+            color: var(--text-color);
+            text-decoration: none;
+            font-family: 'Playfair Display', serif;
+            font-size: 1rem;
+            padding: 8px 12px;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            opacity: 0.6;
+            border-radius: 25px;
+            position: relative;
+        }
+
+        .alphabet-index a.active {
+            opacity: 1;
+            background: rgba(254, 194, 96, 0.15);
+            box-shadow: 0 0 15px rgba(254, 194, 96, 0.3);
+            transform: scale(1.1);
+        }
+
+        .alphabet-index a:hover {
+            opacity: 1;
+            background: rgba(254, 194, 96, 0.1);
+        }
+
+        .spells-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+            padding: 0 20px;
+            transition: opacity 0.4s ease;
+        }
+
+        .spell-card {
+            background: linear-gradient(135deg, rgba(45, 31, 71, 0.9) 0%, rgba(61, 43, 95, 0.9) 100%);
+            border-radius: 20px;
+            padding: 25px;
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 20px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2),
+                        0 0 0 1px rgba(254, 194, 96, 0.1);
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+            animation: cardAppear 0.5s ease-out forwards;
+            opacity: 0;
+        }
+
+        @keyframes cardAppear {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .spell-card:hover {
+            transform: translateY(-5px) scale(1.02);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3),
+                        0 0 0 1px rgba(254, 194, 96, 0.2);
+        }
+
+        .spell-info {
+            position: relative;
+            z-index: 1;
+        }
+
+        .spell-info h2 {
+            font-family: 'Playfair Display', serif;
+            color: var(--text-color);
+            margin-bottom: 10px;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .spell-pronunciation {
+            font-style: italic;
+            margin-bottom: 15px;
+            color: #ccc;
+        }
+
+        .spell-description {
+            line-height: 1.6;
+        }
+
+        .spell-media {
+            position: relative;
+            z-index: 1;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-family: 'Space Mono', monospace;
-            background-color: white;
-            color: #333;
+            background-color: rgba(0, 0, 0, 0.2);
+            border-radius: 10px;
+            overflow: hidden;
         }
 
-        .container {
+        .spell-media img {
+            max-width: 100%;
+            height: auto;
+            transition: transform 0.3s ease;
+        }
+
+        .spell-media:hover img {
+            transform: scale(1.05);
+        }
+
+        .footer {
             text-align: center;
-            padding: 2rem;
-        }
-
-        h1 {
-            font-size: 2.5rem;
-            margin-bottom: 1rem;
-            font-weight: 700;
-        }
-
-        p {
+            margin-top: 60px;
+            margin-bottom: 30px;
+            font-family: 'Crimson Text', serif;
             font-size: 1.1rem;
-            margin-bottom: 2rem;
-            color: #666;
+            color: var(--text-color);
+            line-height: 1.6;
         }
 
-        .loading {
-            width: 50px;
-            height: 50px;
-            border: 3px solid #f3f3f3;
-            border-top: 3px solid #333;
+        .footer a {
+            color: var(--text-color);
+            text-decoration: underline;
+            transition: text-shadow 0.3s ease;
+        }
+
+        .footer a:hover {
+            text-shadow: 0 0 10px rgba(254, 194, 96, 0.5);
+        }
+
+        .footer a::after {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 1px;
+            bottom: -2px;
+            left: 0;
+            background-color: var(--text-color);
+            transform: scaleX(0);
+            transform-origin: bottom right;
+            transition: transform 0.3s ease;
+        }
+
+        .audio-controls {
+            position: fixed;
+            bottom: 15px;
+            right: 15px;
+            background: linear-gradient(135deg, #2d1f47 0%, #3d2b5f 100%);
+            padding: 12px;
             border-radius: 50%;
-            animation: spin 1s linear infinite;
-            margin: 0 auto;
+            cursor: pointer;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+            z-index: 1000;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+        .audio-controls:hover {
+            transform: scale(1.1);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+        }
+
+        .audio-controls i {
+            color: var(--text-color);
+            font-size: 1rem;
+        }
+
+        @media (max-width: 768px) {
+            .spell-card {
+                grid-template-columns: 1fr;
+            }
+
+            .spells-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .header h1 {
+                font-size: 2.5rem;
+            }
+
+            .alphabet-index {
+                border-radius: 25px;
+                padding: 10px;
+            }
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="loading"></div>
-        <h1>Website Coming Soon</h1>
-        <p>We're working hard to bring you something amazing.</p>
+    <div class="site-link">alvin.fun</div>
+    
+    <header class="header">
+        <h1>Hogwarts Spellbook</h1>
+        <p>A Comprehensive Guide to Magical Spells</p>
+        <div class="spell-counter" id="spellCounter"></div>
+    </header>
+
+    <nav class="alphabet-index" id="alphabetIndex">
+        <!-- Will be populated by JavaScript -->
+    </nav>
+
+    <div class="spells-container" id="spellsContainer">
+        <!-- Will be populated by JavaScript -->
     </div>
+
+    <div class="audio-controls" id="audioControls">
+        <i class="fas fa-volume-up" id="audioIcon"></i>
+    </div>
+
+    <audio id="bgMusic" loop>
+        <source src="hedwigs-theme.mp3" type="audio/mp3">
+    </audio>
+
+    <footer class="footer">
+        Don't see your favourite spell here?<br>
+        Feel free to drop a <a href="https://forms.gle/hpdMd9T6q8ybwvCE6">message</a> and let me know!
+    </footer>
+
+    <script>
+        // Sample spells data
+        const spells = [
+        {
+    name: "Alohomora",
+    pronunciation: "ah-LOH-ho-MOR-ah",
+    description: "Unlocks doors and objects.",
+    image: "images/Alohomora.gif"
+},
+{
+    name: "Expelliarmus",
+    pronunciation: "ex-PELL-ee-AR-mus",
+    description: "Disarms an opponent.",
+    image: "images/Expelliarmus.gif"
+},
+{
+    name: "Lumos",
+    pronunciation: "LOO-mos",
+    description: "Creates light at the wand tip.",
+    image: "images/Lumos.gif"
+},
+{
+    name: "Nox",
+    pronunciation: "NOCKS",
+    description: "Extinguishes the wand light.",
+    image: "images/Nox.gif"
+},
+{
+    name: "Wingardium Leviosa",
+    pronunciation: "win-GAR-dee-um lev-ee-OH-sa",
+    description: "Levitates objects.",
+    image: "images/WingardiumLeviosa.gif"
+},
+{
+    name: "Accio",
+    pronunciation: "AK-ee-oh",
+    description: "Summons objects.",
+    image: "images/Accio.gif"
+},
+{
+    name: "Avada Kedavra",
+    pronunciation: "uh-VAH-duh kuh-DAH-vruh",
+    description: "Kills instantly.",
+    image: "images/AvadaKedavra.gif"
+},
+{
+    name: "Expecto Patronum",
+    pronunciation: "ex-PEK-toh pah-TROH-num",
+    description: "Summons a protective Patronus.",
+    image: "images/ExpectoPatronum.gif"
+},
+{
+    name: "Crucio",
+    pronunciation: "KROO-see-oh",
+    description: "Inflicts intense pain.",
+    image: "images/Crucio.gif"
+},
+{
+    name: "Imperio",
+    pronunciation: "im-PEER-ee-oh",
+    description: "Controls a person’s actions.",
+    image: "images/Imperio.gif"
+},
+{
+    name: "Obliviate",
+    pronunciation: "oh-BLIV-ee-ate",
+    description: "Erases memories.",
+    image: "images/Obliviate.gif"
+},
+{
+    name: "Stupefy",
+    pronunciation: "STOO-puh-fy",
+    description: "Stuns an opponent.",
+    image: "images/Stupefy.gif"
+},
+{
+    name: "Petrificus Totalus",
+    pronunciation: "peh-TRI-fi-kus toh-TAL-us",
+    description: "Paralyzes the target.",
+    image: "images/PetrificusTotalus.gif"
+},
+{
+    name: "Sectumsempra",
+    pronunciation: "SEK-tum-SEMP-rah",
+    description: "Inflicts deep wounds.",
+    image: "images/Sectumsempra.gif"
+},
+{
+    name: "Riddikulus",
+    pronunciation: "rih-DIK-yoo-lus",
+    description: "Turns a Boggart humorous.",
+    image: "images/Riddikulus.gif"
+},
+{
+    name: "Expulso",
+    pronunciation: "ex-PUL-soh",
+    description: "Causes an explosion.",
+    image: "images/Expulso.gif"
+},
+{
+    name: "Protego",
+    pronunciation: "pro-TAY-go",
+    description: "Shields the caster.",
+    image: "images/Protego.gif"
+},
+{
+    name: "Reparo",
+    pronunciation: "reh-PAH-roh",
+    description: "Repairs broken objects.",
+    image: "images/Reparo.gif"
+},
+{
+    name: "Aguamenti",
+    pronunciation: "AH-gwah-MEN-tee",
+    description: "Produces water from the wand.",
+    image: "images/Aguamenti.gif"
+},
+{
+    name: "Finite Incantatem",
+    pronunciation: "fi-NEE-tay in-can-TAH-tem",
+    description: "Ends ongoing spells.",
+    image: "images/FiniteIncantatem.gif"
+},
+{
+    name: "Incendio",
+    pronunciation: "in-SEN-dee-oh",
+    description: "Conjures fire.",
+    image: "images/Incendio.gif"
+},
+{
+    name: "Colloportus",
+    pronunciation: "co-lo-POR-tus",
+    description: "Seals doors magically.",
+    image: "images/Colloportus.gif"
+},
+{
+    name: "Obscuro",
+    pronunciation: "ob-SKYOOR-oh",
+    description: "Blindfolds the target.",
+    image: "images/Obscuro.gif"
+},
+{
+    name: "Rictusempra",
+    pronunciation: "rik-too-SEM-prah",
+    description: "Causes uncontrollable laughter.",
+    image: "images/Rictusempra.gif"
+},
+{
+    name: "Episkey",
+    pronunciation: "eh-PIS-key",
+    description: "Heals minor injuries.",
+    image: "images/Episkey.gif"
+},
+{
+    name: "Confundo",
+    pronunciation: "con-FUN-doh",
+    description: "Confuses the target.",
+    image: "images/Confundo.gif"
+},
+{
+    name: "Engorgio",
+    pronunciation: "en-GOR-jee-oh",
+    description: "Enlarges objects.",
+    image: "images/Engorgio.gif"
+},
+{
+    name: "Geminio",
+    pronunciation: "jeh-MIN-ee-oh",
+    description: "Duplicates objects.",
+    image: "images/Geminio.gif"
+},
+{
+    name: "Homenum Revelio",
+    pronunciation: "HOH-meh-num reh-VEH-lee-oh",
+    description: "Reveals nearby humans.",
+    image: "images/HomenumRevelio.gif"
+},
+{
+    name: "Levicorpus",
+    pronunciation: "leh-vee-COR-pus",
+    description: "Suspends the target upside-down.",
+    image: "images/Levicorpus.gif"
+},
+{
+    name: "Langlock",
+    pronunciation: "LANG-lock",
+    description: "Glues the target’s tongue to their mouth.",
+    image: "images/Langlock.gif"
+},
+{
+    name: "Tarantallegra",
+    pronunciation: "TAH-ran-tah-LEG-rah",
+    description: "Forces the target to dance uncontrollably.",
+    image: "images/Tarantallegra.gif"
+},
+{
+    name: "Portus",
+    pronunciation: "POR-tus",
+    description: "Creates a Portkey for travel.",
+    image: "images/Portus.gif"
+}
+        ];
+
+        // Get unique starting letters from spells
+        const getUniqueLetters = () => {
+            return [...new Set(spells.map(spell => spell.name[0]))].sort();
+        };
+
+        // Populate alphabet index
+        const populateAlphabetIndex = () => {
+            const alphabetIndex = document.getElementById('alphabetIndex');
+            const letters = getUniqueLetters();
+            
+            letters.forEach(letter => {
+                const link = document.createElement('a');
+                link.href = '#';
+                link.textContent = letter;
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    filterSpells(letter);
+                    updateActiveLink(letter);
+                });
+                alphabetIndex.appendChild(link);
+            });
+        };
+
+        // Update active link in alphabet index
+        const updateActiveLink = (activeLetter) => {
+            document.querySelectorAll('.alphabet-index a').forEach(link => {
+                link.classList.remove('active');
+                if (link.textContent === activeLetter) {
+                    link.classList.add('active');
+                }
+            });
+        };
+
+        const updateSpellCounter = () => {
+            const spellCounter = document.getElementById('spellCounter');
+            spellCounter.textContent = `SPELL COUNTER : ${spells.length}`;
+        };
+
+        // Modified filterSpells function (removed counter update from here)
+        const filterSpells = (letter) => {
+            const container = document.getElementById('spellsContainer');
+            container.innerHTML = '';
+            
+            const filteredSpells = spells.filter(spell => 
+                spell.name.charAt(0).toUpperCase() === letter.toUpperCase()
+            );
+            
+            filteredSpells.forEach(spell => {
+                container.innerHTML += `
+                    <div class="spell-card">
+                        <div class="spell-info">
+                            <h2>${spell.name}</h2>
+                            <div class="spell-pronunciation">${spell.pronunciation}</div>
+                            <div class="spell-description">${spell.description}</div>
+                        </div>
+                        <div class="spell-media">
+                            <img src="${spell.image}" alt="${spell.name} spell demonstration">
+                        </div>
+                    </div>
+                `;
+            });
+        };
+
+        // Audio control setup
+        const bgMusic = document.getElementById('bgMusic');
+        const audioControls = document.getElementById('audioControls');
+        const audioIcon = document.getElementById('audioIcon');
+        let isPlaying = false;
+
+        bgMusic.volume = 0.5;
+
+        audioControls.addEventListener('click', () => {
+            if (isPlaying) {
+                bgMusic.pause();
+                audioIcon.className = 'fas fa-volume-mute';
+            } else {
+                bgMusic.play();
+                audioIcon.className = 'fas fa-volume-up';
+            }
+            isPlaying = !isPlaying;
+        });
+
+        // Initialize the page
+        window.addEventListener('load', () => {
+            populateAlphabetIndex();
+            updateSpellCounter(); // Add total spell count
+            // Select first letter by default
+            const firstLetter = getUniqueLetters()[0];
+            filterSpells(firstLetter);
+            updateActiveLink(firstLetter);
+        });
+    </script>
 </body>
 </html>
